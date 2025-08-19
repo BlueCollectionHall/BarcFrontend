@@ -2,8 +2,10 @@
 import {onMounted, ref} from "vue";
 import type {CategoryImpl} from "@/interfaces/CategoryImpl.ts";
 import {baseHttp} from "@/utils/https.ts";
+import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
 
 const category = ref<Array<CategoryImpl> | null>(null);
+const userArchive = ref<UserArchiveImpl | null>(null);
 
 const fetchCategory = async () => {
   await baseHttp ({
@@ -17,6 +19,20 @@ const fetchCategory = async () => {
 }
 onMounted(() => {
   fetchCategory();
+  if (window.localStorage.getItem("token")) {
+    baseHttp({
+      url: "/user/current_me",
+      method: "GET",
+      headers: {Authorization: window.localStorage.getItem("token")},
+    }).then(res => {
+      if (res.data.code === 0) {
+        userArchive.value = res.data.data;
+        console.log(userArchive.value);
+      }
+    });
+  } else {
+    console.log("no login");
+  }
 })
 </script>
 
