@@ -16,9 +16,9 @@ const fetchMessage = (limit: number) => {
   }).then(res => {
     if (res?.data?.code === 0) {
       messageList.value = res?.data?.data;
-      console.log("messageList", res?.data?.data);
+      // console.log("messageList", res?.data?.data);
       messageList.value = messageList.value?.map(msg => ({...msg, userInfo: undefined}));
-      console.log("messageList----map", messageList.value);
+      // console.log("messageList----map", messageList.value);
       messageList.value.forEach(message => {fetchUserInfo(message.author)});
     }
   })
@@ -32,7 +32,7 @@ const fetchUserInfo = async (uuid: string): Promise<void> => {
       params: {uuid}
     });
     const userInfo: UserArchiveImpl = response.data.data;
-    console.log("userInfo", userInfo);
+    // console.log("userInfo", userInfo);
     updateMessageUserInfo(uuid, userInfo);
   }
   catch (error) {
@@ -43,11 +43,11 @@ const updateMessageUserInfo = (userId: string, userInfo: UserArchiveImpl): void 
   messageList.value = messageList.value.map(msg =>
     msg.author === userId ? { ...msg, userInfo } : msg
   )
-  console.log("messageList----finish", messageList.value);
+  // console.log("messageList----finish", messageList.value);
 }
 
 onMounted(() => {
-  fetchMessage(5);
+  fetchMessage(3);
 })
 </script>
 

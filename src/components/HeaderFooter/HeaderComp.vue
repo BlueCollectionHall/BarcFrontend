@@ -2,10 +2,14 @@
 import {onMounted, ref} from "vue";
 import type {CategoryImpl} from "@/interfaces/CategoryImpl.ts";
 import {baseHttp} from "@/utils/https.ts";
-import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
+import {useUserPinia} from "@/stores/UserPinia.ts";
+import {storeToRefs} from "pinia";
+const userPinia = useUserPinia();
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 const category = ref<Array<CategoryImpl> | null>(null);
-const userArchive = ref<UserArchiveImpl | null>(null);
+const {userArchive, userBasic} = storeToRefs(userPinia);
 
 const fetchCategory = async () => {
   await baseHttp ({
@@ -17,22 +21,12 @@ const fetchCategory = async () => {
     }
   })
 }
+const logout = () => {
+  window.localStorage.removeItem("token");
+  router.go(0);
+}
 onMounted(() => {
   fetchCategory();
-  if (window.localStorage.getItem("token")) {
-    baseHttp({
-      url: "/user/current_me",
-      method: "GET",
-      headers: {Authorization: window.localStorage.getItem("token")},
-    }).then(res => {
-      if (res.data.code === 0) {
-        userArchive.value = res.data.data;
-        console.log(userArchive.value);
-      }
-    });
-  } else {
-    console.log("no login");
-  }
 })
 </script>
 
@@ -51,8 +45,9 @@ onMounted(() => {
 <!--      <router-link class="menu-item" to="/about" active-class="active">关于</router-link>-->
 <!--      <router-link class="menu-item" to="/more" active-class="active">更多</router-link>-->
 <!--      <router-link class="menu-item" to="/test" active-class="active">接口测试</router-link>-->
-      <router-link class="menu-item" to="/account" active-class="active" v-if="true">登录 | 注册</router-link>
+      <router-link class="menu-item" to="/sign" active-class="active" v-if="userArchive === null">登录 | 注册</router-link>
 <!--      <router-link class="menu-item" to="/user" active-class="active" v-else>{{ userArchive?.nickname }}</router-link>-->
+      <img @click="logout" v-else :src="userArchive.avatar || 'null'" alt="avatar" style="width: 48px; border: #deefff 2px solid; border-radius: 20px"/>
     </div>
 
   </div>

@@ -1,4 +1,28 @@
 <script setup lang="ts">
+import {useUserPinia} from "@/stores/UserPinia.ts";
+import {onMounted, watch} from "vue";
+import {storeToRefs} from "pinia";
+const userPinia = useUserPinia();
+
+onMounted(() => {
+  const token: string | null = window.localStorage.getItem("token");
+  if (token) {
+    userPinia.fetchUserInfo(token);
+  } else {
+    console.log("未登录");
+  }
+})
+
+watch(() => window.localStorage.getItem("token"), (newVal: string | null) => {
+  if (newVal) {
+    userPinia.fetchUserInfo(newVal);
+  } else {
+    console.log("未登录");
+  }
+})
+// userPinia.$subscribe((mutation, state) => {
+//   console.log("订阅变化", mutation, state);
+// })
 </script>
 
 <template>
