@@ -16,7 +16,7 @@ export interface UserBasicImpl {
   password_version: number;
   email: string;
   email_verified: boolean;
-  telephone: string;
+  telephone: string | null;
   safe_level: number;
   created_at: Date;
   updated_at: Date;
