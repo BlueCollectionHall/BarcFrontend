@@ -4,6 +4,7 @@ import HomeContainerTimeComp from "@/components/Home/Container/HomeContainerTime
 import HomeContainerSelectItemComp
   from "@/components/Home/Container/HomeContainerSelectItemComp.vue";
 import HomeContainerMessageComp from "@/components/Home/Container/HomeContainerMessageComp.vue";
+import HomeContainerWorkItemComp from "@/components/Home/Container/HomeContainerWorkItemComp.vue";
 </script>
 
 <template>
@@ -15,7 +16,7 @@ import HomeContainerMessageComp from "@/components/Home/Container/HomeContainerM
         <HomeContainerMessageComp/>
       </div>
       <div>
-
+        <HomeContainerWorkItemComp/>
       </div>
     </div>
   </div>
@@ -33,5 +34,6 @@ import HomeContainerMessageComp from "@/components/Home/Container/HomeContainerM
   margin-top: 3rem;
   display: grid;
   grid-template-columns: 1fr 2fr;
+  gap: 2rem;
 }
 </style>
