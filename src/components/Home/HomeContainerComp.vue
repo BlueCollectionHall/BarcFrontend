@@ -14,7 +14,9 @@ import HomeContainerMessageComp from "@/components/Home/Container/HomeContainerM
         <HomeContainerSelectItemComp/>
         <HomeContainerMessageComp/>
       </div>
-      <div></div>
+      <div>
+
+      </div>
     </div>
   </div>
 </template>
