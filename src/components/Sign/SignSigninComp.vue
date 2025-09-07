@@ -7,6 +7,7 @@ const router = useRouter();
 import {useUserPinia} from "@/stores/UserPinia.ts";
 const userPinia = useUserPinia();
 import {CheckOutlined} from "@ant-design/icons-vue";
+import {errorMessage} from "@/utils/MessageAlert.ts";
 
 interface SigninFormImpl {
   type: string;
@@ -24,7 +25,9 @@ const signinFormFinish = async () => {
     if (loginSource.value === "barc") {
       response = await baseHttp("/user/sign/in", {method: "GET", params: signinForm.value});
     } else {
-      signinForm.value.type === 'username'? signinForm.value.type = 'uid': console.log();
+      if (signinForm.value.type === 'username') {
+        signinForm.value.type = 'uid';
+      }
       response = await baseHttp("/user/sign/in_by_naigos", {method: "GET", params: signinForm.value});
     }
     const data: ResponseImpl = response.data;
@@ -34,9 +37,9 @@ const signinFormFinish = async () => {
       await userPinia.fetchUserInfo(token)
       router.back();
     }
-    console.log("登录失败");
-  } catch (err) {
-    console.log("登录失败");
+    errorMessage("登录失败");
+  } catch {
+    errorMessage("登录失败");
   }
 }
 </script>

@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <header class="header">
     <!--  anotherInfo  -->
     <div class="anotherInfo">
       B.A.R.C
@@ -50,11 +50,11 @@ onMounted(() => {
       <img @click="logout" v-else :src="userArchive.avatar || 'null'" alt="avatar" style="width: 48px; border: #deefff 2px solid; border-radius: 20px"/>
     </div>
 
-  </div>
+  </header>
 </template>
 
 <style scoped>
-.container {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;

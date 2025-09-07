@@ -65,7 +65,6 @@ onUnmounted(() => {
 
 <style scoped>
 .time_box {
-  border-radius: 2rem 2rem 0 0;
   position: relative;
   height: 4rem;
   background-color: #fff;

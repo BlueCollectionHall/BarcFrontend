@@ -32,25 +32,26 @@ const itemList: Array<{label: string; value: string; logo: string}> = [
   gap: 1rem;
 }
 .title {
-  color: white;
+  color: #56508c;
   display: flex;
+  font-weight: bold;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: .5rem;
   a {
-    color: white;
+    color: #56508c;
   }
 }
 .items {
   display: flex;
   gap: 4rem;
   .item {
-    color: white;
+    color: #657fd1;
     padding: .5rem;
     font-size: 2rem;
     background-color: #ffffff80;
-    border: #fff 2px solid;
+    border: #657fd1 2px solid;
     border-radius: 1rem;
     transition: background-color, color, border .5s ease;
   }

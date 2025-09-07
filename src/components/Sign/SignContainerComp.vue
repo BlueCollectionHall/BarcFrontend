@@ -29,7 +29,7 @@ const signInOrUp = ref<string>("in");
   max-width: 100vw;
   height: calc(100vh - 10rem);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -37,7 +37,7 @@ const signInOrUp = ref<string>("in");
 }
 .items {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
   .item {
     height: 4rem;
@@ -49,7 +49,7 @@ const signInOrUp = ref<string>("in");
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    color: white;
+    color: #f9a5e5;
     transition: background-color, border, color .5s ease;
   }
   z-index: 1;
@@ -61,7 +61,7 @@ const signInOrUp = ref<string>("in");
   color: #383838;
 }
 .item_select {
-  border: #383838 2px solid !important;
+  border: #f9a5e5 2px solid !important;
 }
 
 </style>
