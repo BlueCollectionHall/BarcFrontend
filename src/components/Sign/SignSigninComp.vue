@@ -36,8 +36,7 @@ const signinFormFinish = async () => {
       window.localStorage.setItem("token", token);
       await userPinia.fetchUserInfo(token)
       router.back();
-    }
-    errorMessage("登录失败");
+    } else errorMessage(data.data);
   } catch {
     errorMessage("登录失败");
   }
