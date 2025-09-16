@@ -5,7 +5,7 @@
   overflow: hidden;
   z-index: -5;
 }
-.bgi {
+.bgi, .bgv{
   min-height: 100%;
   /*max-width: 100%;*/
 }

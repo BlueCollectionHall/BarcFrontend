@@ -5,6 +5,8 @@ import type {StudentImpl} from "@/interfaces/BaImpl.ts";
 import {baseHttp} from "@/utils/https.ts";
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {errorMessage, infoMessage} from "@/utils/MessageAlert.ts";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 const studentList = ref<Array<StudentImpl>>([]);
 
@@ -17,6 +19,10 @@ const fetchUpdatedStudents = async () => {
   } catch {
     errorMessage("网络出错！");
   }
+}
+
+const toStudent = (student_id: string) => {
+  router.push({name: "Student", query: {student_id: student_id}});
 }
 
 onMounted(async () => {
@@ -36,7 +42,7 @@ onMounted(async () => {
       <span class="text">近一个月内暂无最新收录作品对应的学生</span>
     </div>
     <div class="students" v-else>
-      <div class="student" v-for="item in studentList" :key="item.id">
+      <div class="student" v-for="item in studentList" :key="item.id" @click="toStudent(item.id)">
         <img class="avatar" :src="item.avatar_rectangle" alt="student"/>
         <span class="name">{{item.cn_name}}</span>
       </div>
