@@ -21,9 +21,9 @@ const fetchCategory = async () => {
     }
   })
 }
-const logout = () => {
-  window.localStorage.removeItem("token");
-  router.go(0);
+
+const toAccountView = (username: string) => {
+  router.push({name: "Account", query: {username: username}});
 }
 onMounted(() => {
   fetchCategory();
@@ -45,9 +45,9 @@ onMounted(() => {
 <!--      <router-link class="menu-item" to="/about" active-class="active">关于</router-link>-->
 <!--      <router-link class="menu-item" to="/more" active-class="active">更多</router-link>-->
 <!--      <router-link class="menu-item" to="/test" active-class="active">接口测试</router-link>-->
-      <router-link class="menu-item" to="/sign" active-class="active" v-if="userArchive === null">登录 | 注册</router-link>
+      <router-link class="menu-item" to="/sign" active-class="active" v-if="userArchive === null || userBasic === null">登录 | 注册</router-link>
 <!--      <router-link class="menu-item" to="/user" active-class="active" v-else>{{ userArchive?.nickname }}</router-link>-->
-      <img @click="logout" v-else :src="userArchive.avatar || 'null'" alt="avatar" style="width: 48px; border: #deefff 2px solid; border-radius: 20px"/>
+      <img @click="toAccountView(userBasic.username)" v-else :src="userArchive.avatar || 'null'" alt="avatar" style="width: 48px; border: #deefff 2px solid; border-radius: 20px"/>
     </div>
 
   </header>

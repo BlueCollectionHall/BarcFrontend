@@ -1,36 +1,36 @@
 <script setup lang="ts">
 
-import HomeContainerTimeComp from "@/components/Home/Container/HomeContainerTimeComp.vue";
-import HomeContainerSelectItemComp
-  from "@/components/Home/Container/HomeContainerSelectItemComp.vue";
-import HomeContainerMessageComp from "@/components/Home/Container/HomeContainerMessageComp.vue";
-import HomeContainerUpdatedComp from "@/components/Home/Container/HomeContainerUpdatedComp.vue";
-import HomeContainerJoinComp from "@/components/Home/Container/HomeContainerJoinComp.vue";
-import HomeNoticeComp from "@/components/Home/Container/HomeNoticeComp.vue";
-import HomeArticleComp from "@/components/Home/Container/HomeArticleComp.vue";
-import HomeContainerFriendshipComp
-  from "@/components/Home/Container/HomeContainerFriendshipComp.vue";
+import HomeTimeComp from "@/components/Home/HomeTimeComp.vue";
+import HomeSelectItemComp
+  from "@/components/Home/HomeSelectItemComp.vue";
+import HomeMessageComp from "@/components/Home/HomeMessageComp.vue";
+import HomeUpdatedComp from "@/components/Home/HomeUpdatedComp.vue";
+import HomeJoinComp from "@/components/Home/HomeJoinComp.vue";
+import HomeNoticeComp from "@/components/Home/HomeNoticeComp.vue";
+import HomeArticleComp from "@/components/Home/HomeArticleComp.vue";
+import HomeFriendshipComp
+  from "@/components/Home/HomeFriendshipComp.vue";
 </script>
 
 <template>
   <div class="container">
     <div class="c1">
       <div class="c1_left">
-        <HomeContainerTimeComp/>
-        <HomeContainerSelectItemComp/>
-        <HomeContainerMessageComp/>
+        <HomeTimeComp/>
+        <HomeSelectItemComp/>
+        <HomeMessageComp/>
       </div>
       <div class="c1_right">
-        <HomeContainerUpdatedComp/>
-        <HomeContainerJoinComp/>
+        <HomeUpdatedComp/>
+        <HomeJoinComp/>
       </div>
     </div>
-    <div class="c2">
+    <div class="c2 c">
       <HomeNoticeComp/>
       <HomeArticleComp/>
     </div>
-    <div class="c3">
-      <HomeContainerFriendshipComp/>
+    <div class="c3 c">
+      <HomeFriendshipComp/>
     </div>
   </div>
 </template>
@@ -54,17 +54,14 @@ import HomeContainerFriendshipComp
     gap: 1rem;
   }
 }
-.c2 {
+.c {
   background-color: #ffffff80;
   padding: 1rem;
   margin-top: 1rem;
+}
+.c2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-}
-.c3 {
-  background-color:  #ffffff80;
-  padding: 1rem;
-  margin-top: 1rem;
 }
 </style>
