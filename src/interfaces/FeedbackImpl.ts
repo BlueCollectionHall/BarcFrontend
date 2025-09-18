@@ -9,6 +9,21 @@ export interface FeedbackOptionImpl {
   parent_id: string;
 }
 
+export interface FeedBackImpl {
+  id: string;
+  target_id: string;
+  ipv4: string | null;
+  ipv6: string | null;
+  author: string | null;
+  email: string | null;
+  content: string;
+  echo: string | null;
+  type: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export interface FeedbackWorkImpl {
   id: string;
   work_id: string;
