@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {baseHttp} from "@/utils/https.ts";
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {errorMessage, infoMessage} from "@/utils/MessageAlert.ts";
-import type {ClubImpl, SchoolClubImpl, SchoolImpl, StudentImpl} from "@/interfaces/BaImpl.ts";
+import type {ClubImpl, SchoolImpl, StudentImpl} from "@/interfaces/BaImpl.ts";
 import {useRoute} from "vue-router";
 const route = useRoute();
 

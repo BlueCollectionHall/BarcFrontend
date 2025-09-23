@@ -20,6 +20,7 @@ const items: Array<ItemImpl> = [
   {label: "上传作品", value: "WorkUpload", icon: "ArrowUpOutlined", is_self: true},
   {label: "内容管理", value: "ContentManage", icon: "SlidersOutlined", is_self: true},
   {label: "投诉此人", value: "FeedbackUser", icon: "AlertOutlined", is_self: false},
+  {label: "登出账号", value: "Logout", icon: "LogoutOutlined", is_self: true},
 ];
 
 const {userBasic} = storeToRefs(userPinia);
@@ -33,6 +34,10 @@ const itemClicked = (itemValue: string) => {
   switch (itemValue) {
     case "FeedbackUser": {
       showModal(); break;
+    } case "Logout": {
+      window.localStorage.removeItem("token");
+      router.go(0);
+      break;
     }
   }
 }

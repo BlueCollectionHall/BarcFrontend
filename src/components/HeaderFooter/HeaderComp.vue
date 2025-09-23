@@ -68,7 +68,7 @@ onMounted(() => {
   transition: all 0.5s;
   color: #000000;
 }
-.container:hover {
+.header:hover {
   background-color:  #ffffff;
 }
 

@@ -5,6 +5,8 @@ import MessageBoardRouter from "@/router/MessageBoardRouter.ts";
 import AccountRouter from "@/router/AccountRouter.ts";
 import StudentRouter from "@/router/StudentRouter.ts";
 import ServiceRouter from "@/router/ServiceRouter.ts";
+import FeedbackRouter from "@/router/FeedbackRouter.ts";
+import JoinRouter from "@/router/JoinRouter.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +17,8 @@ const router = createRouter({
     AccountRouter,
     StudentRouter,
     ServiceRouter,
+    FeedbackRouter,
+    JoinRouter,
   ],
 })
 
