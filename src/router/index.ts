@@ -7,6 +7,7 @@ import StudentRouter from "@/router/StudentRouter.ts";
 import ServiceRouter from "@/router/ServiceRouter.ts";
 import FeedbackRouter from "@/router/FeedbackRouter.ts";
 import JoinRouter from "@/router/JoinRouter.ts";
+import UploadRouter from "@/router/UploadRouter.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,7 @@ const router = createRouter({
     ServiceRouter,
     FeedbackRouter,
     JoinRouter,
+    UploadRouter,
   ],
 })
 
