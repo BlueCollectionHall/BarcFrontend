@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {nextTick, onMounted, ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 import type {WorkImpl} from "@/interfaces/WorkImpl.ts";
 import {
   CheckCircleOutlined,
@@ -10,10 +10,10 @@ import {
 // 封面图相关
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import {errorMessage, successMessage} from "@/utils/MessageAlert.ts";
+import {errorMessage, infoMessage, successMessage} from "@/utils/MessageAlert.ts";
 import {useUserPinia} from "@/stores/UserPinia.ts";
 import {storeToRefs} from "pinia";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 // 封面图相关 - 响应式变量
 const coverStatus = ref<number>(0);
 const cropImageValue = ref<string | null>(null);
@@ -23,7 +23,7 @@ const inputRef = ref<HTMLInputElement | null>(null);
 const imageRef = ref<HTMLImageElement | null>(null);
 let cropper: Cropper | null = null;
 // 封面图相关 - 处理图片选择
-const selectImageFile = (e: Event) => {
+const selectCoverImageFile = (e: Event) => {
   cropImageValue.value = null;
   const {files} = e.target as HTMLInputElement;
   if (!files || !files.length) return;
@@ -62,8 +62,8 @@ const getCroppedImage = () => {
     return;
   }
   const canvas = cropper.getCroppedCanvas({
-    width: 1920,         // 输出宽度（16:9对应高度为1080）
-    height: 1080,
+    width: 640,         // 输出宽度（16:9对应高度为1080）
+    height: 360,
     imageSmoothingEnabled: true,
     imageSmoothingQuality: "high"
   });
@@ -83,7 +83,7 @@ const getCroppedImage = () => {
 };
 
 const userPinia = useUserPinia();
-const router = useRouter();
+// const router = useRouter();
 const route = useRoute();
 
 const {userBasic} = storeToRefs(userPinia);
@@ -91,14 +91,33 @@ const workForm = ref<WorkImpl>({
   id: "", author: "", author_nickname: null, banner_image: "", cover_image: "", content: null, description: null, is_claim: false, status: "PUBLIC", title: "", view_count: 0, like_count: 0, student: "", uploader: null, created_at: new Date(), updated_at: new Date()
 });
 
-onMounted(() => {
-  const username: string = route.query.username as string;
-  if (username !== userBasic.value?.username) {
-    errorMessage("路径与已登录信息不匹配");
-    router.back();
+// onMounted(() => {
+//   const username: string = route.query.username as string;
+//   if (username !== userBasic.value?.username) {
+//     errorMessage("路径与已登录信息不匹配");
+//     router.back();
+//     return;
+//   }
+// })
+
+const studentList = ref<Array<StudentImpl>>([]);
+const studentKeyword = ref<string | null>(null);
+
+const fetchStudentsByKeyword = async () => {
+  if (!studentKeyword.value || studentKeyword.value.length === 0) {
+    errorMessage("请正确输入学生名字！");
     return;
   }
-})
+  try {
+    const response = await baseHttp("/api/student/students_by_keyword", {params: {keyword: studentKeyword.value}});
+    const data: ResponseImpl = response.data;
+    if (data.code === 0) {
+      studentList.value = data.data;
+    } else infoMessage(data.msg);
+  } catch {
+    errorMessage("网络错误！");
+  }
+}
 
 watch(() => workForm.value.is_claim, (newVal: boolean) => {
   if (userBasic.value === null) {
@@ -116,10 +135,11 @@ watch(() => workForm.value.content, newVal => {
 })
 const sm = ref<string | null>(null);
 
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+// 富文本编辑器
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 // 编辑器内容（双向绑定）
-const content = ref('<p>初始内容</p>')
+const content = ref('<p>请输入内容</p>')
 
 // 编辑器配置
 const editorOptions = ref({
@@ -127,9 +147,9 @@ const editorOptions = ref({
     toolbar: [
       ['bold', 'italic', 'underline'],
       ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ align: [] }],
-      ['link', 'image']
+      // [{ list: 'ordered' }, { list: 'bullet' }],
+      // [{ align: [] }],
+      // ['link', 'image']
     ]
   },
   placeholder: '请输入内容...',
@@ -137,28 +157,126 @@ const editorOptions = ref({
 })
 
 // 内容变化处理
-const handleChange = (html: string) => {
+const handleEditorChange = (html: string) => {
   // 过滤危险标签（可选）
   workForm.value.content = html.replace(/<script.*?>.*?<\/script>/gis, '')
 }
 
 // 图片上传处理（示例）
-const uploadImage = async (file: File) => {
-  const formData = new FormData()
-  formData.append('file', file)
+// const uploadImage = async (file: File) => {
+//   const formData = new FormData()
+//   formData.append('file', file)
+//
+//   // 调用上传API（示例）
+//   const res = await fetch('/api/upload', {
+//     method: 'POST',
+//     body: formData
+//   })
+//
+//   return (await res.json()).url
+// }
+// 内容图片
+import {
+  PlusSquareOutlined,
+  LeftOutlined,
+  RightOutlined,
+  DoubleRightOutlined,
+  PlusOutlined,
+  MinusOutlined,
+  RedoOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons-vue";
+import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
+import {baseHttp} from "@/utils/https.ts";
+import type {StudentImpl} from "@/interfaces/BaImpl.ts";
+const contentImageInputRef = ref<HTMLInputElement | null>(null);
 
-  // 调用上传API（示例）
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData
-  })
+const contentImageFileList = ref<Array<File>>([]);
+const contentImagePreviewList = ref<Array<string>>([]);
 
-  return (await res.json()).url
+const contentImageInputClicked = () => {
+  if (!contentImageInputRef.value) return;
+  contentImageInputRef.value.click();
+}
+
+const handleContentImageChange = (e: Event) => {
+  const input: HTMLInputElement = e.target as HTMLInputElement;
+  if (!input.files) return;
+  const files = Array.from(input.files);
+  // 生成预览URL
+  // const newImages: Array<ImageItemImpl> = files.map(file => ({file, previewURL: URL.createObjectURL(file)}));
+  // contentImageList.value = [...contentImageList.value, ...newImages];
+  // 将数组写入ref数据
+  contentImageFileList.value = files;
+  contentImagePreviewList.value = files.map((file: File) => URL.createObjectURL(file));
+}
+
+const deleteContentImageByIndex = (index: number) => {
+  contentImageFileList.value.splice(index, 1);
+  contentImagePreviewList.value.splice(index, 1);
+  successMessage("删除成功");
+}
+
+// 上传文章内容
+const uploadWorkForm = async () => {
+  if (userBasic.value === null) {
+    errorMessage("您尚未登录！");
+    return;
+  }
+  if (route.query.username !== userBasic.value.username) {
+    errorMessage("登录信息与路径不匹配！");
+    return;
+  }
+  if (croppedImageFileValue.value === null) {
+    errorMessage("未设置封面图！");
+    return;
+  }
+  if (workForm.value.student.length === 0) {
+    errorMessage("未选择作品归属的学生！");
+    return;
+  }
+  if (workForm.value.title.length === 0) {
+    errorMessage("未设置标题！");
+    return;
+  }
+  if (!workForm.value.is_claim && (workForm.value.author_nickname === null || workForm.value.author_nickname.length === 0)) {
+    errorMessage("[收录]类型需要说明来源作者！");
+    return;
+  }
+  // 创建FormData对象
+  const formData = new FormData();
+  // 添加JSON表单数据
+  formData.append(
+    "form",
+    JSON.stringify({
+      ...workForm.value,
+      content: content.value // 确保富文本内容被包含
+    })
+  );
+  // 添加封面图（从裁切结果获取）
+  const coverImageBlob = croppedImageFileValue.value.get("cover_image") as Blob;
+  if (coverImageBlob) {
+    formData.append("cover_image", coverImageBlob);
+  }
+  // 添加内容图片
+  contentImageFileList.value.forEach(file => {
+    formData.append("files", file);
+  });
+  try {
+    const response = await baseHttp("/api/work/upload", {
+      headers: {Authorization: window.localStorage.getItem("token")},
+      method: "POST",
+      data: formData,
+    })
+    const data: ResponseImpl = response.data;
+    successMessage(data.msg);
+  } catch {
+    errorMessage("网络错误！")
+  }
 }
 </script>
 
 <template>
-  {{sm}}
   <div class="container">
     <div class="title">
       <h1>发布/收录作品</h1>
@@ -174,7 +292,7 @@ const uploadImage = async (file: File) => {
         <input
           type="file"
           accept="image/*"
-          @change="selectImageFile"
+          @change="selectCoverImageFile"
           class="file-input"/>
         <el-button type="success" @click="getCroppedImage">确认使用</el-button>
       </div>
@@ -213,6 +331,20 @@ const uploadImage = async (file: File) => {
 <!--        <button @click="getCroppedImage">保存图片</button>-->
 <!--      </div>-->
     </div>
+    <div class="select_student_box box">
+      <h2 style="text-align: center">选择作品所属学生</h2>
+      <div class="select_student_bar">
+        <el-input placeholder="学生的中文或英文名" v-model="studentKeyword"/>
+        <el-button type="primary" @click="fetchStudentsByKeyword" native-type="button">搜索</el-button>
+      </div>
+      <div class="select_student_item_box" v-if="studentList.length > 0">
+        <el-button
+          v-for="item in studentList"
+          :key="item.id"
+          @click="workForm.student = item.id"
+          :type="workForm.student === item.id? 'primary': 'default'">{{item.cn_name}}</el-button>
+      </div>
+    </div>
     <div class="work_info_box">
       <div class="work_props_box box">
         <el-form :model="workForm" label-width="auto">
@@ -238,13 +370,50 @@ const uploadImage = async (file: File) => {
       </div>
       <div class="work_content_box box">
         <QuillEditor
+          class="editor"
           v-model:content="content"
           contentType="html"
           theme="snow"
           :options="editorOptions"
-          @update:content="handleChange"
+          @update:content="handleEditorChange"
         />
+        <div class="content_image_box">
+          <el-image
+            style="width: 100px; height: 100px"
+            v-for="(item, index) in contentImagePreviewList"
+            :key="index"
+            :src="item"
+            :initial-index="index"
+            show-progress
+            fit="cover"
+            :preview-src-list="contentImagePreviewList"
+          >
+            <template
+              #toolbar="{ actions, prev, next, setActiveItem }"
+            >
+              <el-icon @click="prev"><LeftOutlined /></el-icon>
+              <el-icon @click="next"><RightOutlined /></el-icon>
+              <el-icon @click="setActiveItem(contentImagePreviewList.length - 1)">
+                <DoubleRightOutlined />
+              </el-icon>
+              <el-icon @click="actions('zoomOut')"><MinusOutlined /></el-icon>
+              <el-icon
+                @click="actions('zoomIn', { enableTransition: false, zoomRate: 1 })"
+              >
+                <PlusOutlined />
+              </el-icon>
+              <el-icon
+                @click="actions('clockwise')">
+                <RedoOutlined />
+              </el-icon>
+              <el-icon @click="deleteContentImageByIndex(index)"><DeleteOutlined /></el-icon>
+            </template>
+          </el-image>
+          <input type="file" accept="image/*" @change="handleContentImageChange" ref="contentImageInputRef" style="display: none" multiple/>
+          <PlusSquareOutlined class="content_image_add" @click="contentImageInputClicked" />
+        </div>
       </div>
+      <el-button type="primary" size="large" native-type="button" @click="uploadWorkForm">上传作品文章</el-button>
     </div>
   </div>
 </template>
@@ -294,6 +463,13 @@ const uploadImage = async (file: File) => {
 .warning {
   color: rgba(96, 231, 249, 0.7);
 }
+
+.select_student_bar {
+  margin: 0 auto;
+  display: flex;
+  width: 50%;
+}
+
 .input_item_box {
   display: flex;
   align-items: center;
@@ -368,5 +544,12 @@ const uploadImage = async (file: File) => {
 .cover_final_image {
   width: calc(16 * 1rem);
   height: calc(9 * 1rem);
+}
+
+.work_content_box {
+}
+.content_image_add {
+  font-size: 5rem;
+  color: #00AEEC;
 }
 </style>
