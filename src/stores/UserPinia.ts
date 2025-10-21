@@ -31,7 +31,7 @@ export const useUserPinia = defineStore('user', () => {
         userBasic.value = dataBasic.data;
       }
       return;
-    } catch (err) {
+    } catch {
       window.localStorage.removeItem("token");
       console.log("fetchUserInfo在Pinia中错误");
       return;
