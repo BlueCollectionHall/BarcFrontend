@@ -106,9 +106,9 @@ const handleOk = async (e: MouseEvent) => {
     <a-textarea v-model:value="feedbackForm.content"/>
   </a-modal>
   <header class="header">
-    <!--  anotherInfo  -->
-    <div class="anotherInfo">
-      B.A.R.C
+    <!--  logo  -->
+    <div class="logo">
+      <router-link style="text-decoration: none; color: #000" to="/">B.A.R.C</router-link>
     </div>
 
     <!--  menu  -->

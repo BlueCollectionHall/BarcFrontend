@@ -139,7 +139,7 @@ const sm = ref<string | null>(null);
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 // 编辑器内容（双向绑定）
-const content = ref('<p>请输入内容</p>')
+const content = ref('<p></p>')
 
 // 编辑器配置
 const editorOptions = ref({
@@ -278,8 +278,8 @@ const uploadWorkForm = async () => {
 
 <template>
   <div class="container">
-    <div class="title">
-      <h1>发布/收录作品</h1>
+    <div class="title-container">
+      <h1 class="title">发布/收录作品</h1>
     </div>
     <div class="cover_image_box">
       <QuestionCircleOutlined v-if="coverStatus === 0" class="cover_status_icon warning" />
@@ -293,7 +293,10 @@ const uploadWorkForm = async () => {
           type="file"
           accept="image/*"
           @change="selectCoverImageFile"
-          class="file-input"/>
+          id="file-input"/>
+        <label class="file-input" for="file-input">
+          上传图片
+        </label>
         <el-button type="success" @click="getCroppedImage">确认使用</el-button>
       </div>
       <div class="crop_and_preview">
@@ -322,6 +325,7 @@ const uploadWorkForm = async () => {
             <img class="cover_final_image" :src="croppedImageBase64Value" alt="cover_final_image" />
           </div>
         </div>
+
       </div>
       <!-- 裁剪结果 -->
 <!--      <button @click="getCroppedImage">保存图片</button>-->
@@ -331,21 +335,7 @@ const uploadWorkForm = async () => {
 <!--        <button @click="getCroppedImage">保存图片</button>-->
 <!--      </div>-->
     </div>
-    <div class="select_student_box box">
-      <h2 style="text-align: center">选择作品所属学生</h2>
-      <div class="select_student_bar">
-        <el-input placeholder="学生的中文或英文名" v-model="studentKeyword"/>
-        <el-button type="primary" @click="fetchStudentsByKeyword" native-type="button">搜索</el-button>
-      </div>
-      <div class="select_student_item_box" v-if="studentList.length > 0">
-        <el-button
-          v-for="item in studentList"
-          :key="item.id"
-          @click="workForm.student = item.id"
-          :type="workForm.student === item.id? 'primary': 'default'">{{item.cn_name}}</el-button>
-      </div>
-    </div>
-    <div class="work_info_box">
+    <div class="work_info">
       <div class="work_props_box box">
         <el-form :model="workForm" label-width="auto">
           <el-form-item label="作品ID号：">
@@ -368,15 +358,35 @@ const uploadWorkForm = async () => {
           </el-form-item>
         </el-form>
       </div>
+      <div class="select_student_box box">
+        <h2 class="title">选择作品所属学生</h2>
+        <div class="select_student_bar">
+          <el-input placeholder="学生的中文或英文名" v-model="studentKeyword"/>
+          <el-button type="primary" @click="fetchStudentsByKeyword" native-type="button">搜索</el-button>
+        </div>
+        <div class="select_student_item_box" v-if="studentList.length > 0">
+          <el-button
+            v-for="item in studentList"
+            :key="item.id"
+            @click="workForm.student = item.id"
+            :type="workForm.student === item.id? 'primary': 'default'">{{item.cn_name}}</el-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="work_info_box">
+
       <div class="work_content_box box">
-        <QuillEditor
-          class="editor"
-          v-model:content="content"
-          contentType="html"
-          theme="snow"
-          :options="editorOptions"
-          @update:content="handleEditorChange"
-        />
+        <div class="ql-container">
+          <QuillEditor
+            v-model:content="content"
+            contentType="html"
+            theme="snow"
+            :options="editorOptions"
+            @update:content="handleEditorChange"
+          />
+        </div>
+
         <div class="content_image_box">
           <el-image
             style="width: 100px; height: 100px"
@@ -413,8 +423,8 @@ const uploadWorkForm = async () => {
           <PlusSquareOutlined class="content_image_add" @click="contentImageInputClicked" />
         </div>
       </div>
-      <el-button type="primary" size="large" native-type="button" @click="uploadWorkForm">上传作品文章</el-button>
     </div>
+    <el-button class="upload-button" type="primary" size="large" native-type="button" @click="uploadWorkForm">上传作品文章</el-button>
   </div>
 </template>
 
@@ -423,28 +433,37 @@ const uploadWorkForm = async () => {
   display: flex;
   flex-direction: column;
   width: 80%;
-  margin: 2rem auto 0 auto;
-  gap: 2rem;
+  margin: 1rem auto 0 auto;
+  gap: 1rem;
 }
-.title {
+
+.title-container {
   text-align: center;
 }
-.work_info_box {
+
+.title {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.work_info {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 2rem;
 }
 .box {
-  box-shadow: #9b9b9b 0 0 5px;
+  box-shadow: 0 0 0.1rem 0.1rem rgb(0 0 0 / 10%);
   padding: 1rem;
 }
 .cover_image_box {
   position: relative;
-  box-shadow: #9b9b9b 0 0 5px;
+  box-shadow: 0 0 0.1rem 0.1rem rgb(0 0 0 / 10%);
   padding: 1rem;
   overflow: hidden;
   .cover_title {
     text-align: center;
+    font-weight: bolder;
   }
 }
 .cover_status_icon {
@@ -465,7 +484,7 @@ const uploadWorkForm = async () => {
 }
 
 .select_student_bar {
-  margin: 0 auto;
+  margin: 10px auto;
   display: flex;
   width: 50%;
 }
@@ -473,14 +492,26 @@ const uploadWorkForm = async () => {
 .input_item_box {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /*justify-content: center;*/
   border-bottom: #9b9b9b solid 1px;
   margin-bottom: 1rem;
 }
+input[type=file] {
+  display: none;
+  opacity: 0;
+}
 .file-input {
   display: block;
-  padding: 1rem 0;
+  padding: .4rem .5rem;
+  margin-right: 1rem;
   border-radius: 4px;
+  background: #00AEEC;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.file-input:hover {
+  background: #54cbff;
 }
 .crop_and_preview {
   display: flex;
@@ -544,12 +575,23 @@ const uploadWorkForm = async () => {
 .cover_final_image {
   width: calc(16 * 1rem);
   height: calc(9 * 1rem);
+  border: #000000 1px solid;
 }
 
 .work_content_box {
+  padding: 0;
+  overflow: hidden;
 }
+.ql-container {
+  height: 100%;
+}
+
 .content_image_add {
-  font-size: 5rem;
+  font-size: 3rem;
   color: #00AEEC;
+}
+
+.upload-button {
+  margin-bottom: 2rem;
 }
 </style>

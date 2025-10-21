@@ -8,6 +8,7 @@
 .bgi, .bgv{
   min-height: 100%;
   /*max-width: 100%;*/
+  background-size: contain;
 }
 .zhezhao {
   position: absolute;
