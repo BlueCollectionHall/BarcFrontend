@@ -25,7 +25,6 @@ const fetchWorkList = async (status: string) => {
   } catch {
     errorMessage("网络错误");
   }
-
 }
 
 onMounted(async () => {
@@ -71,8 +70,8 @@ onMounted(async () => {
           <div class="cover_image_box">
             <img class="cover_image" :src="item.cover_image" alt="cover_image"/>
           </div>
-          <div class="work_info">
-            <span class="work_title">{{item.title}}</span>
+          <div class="info">
+            <span class="title">{{item.title}}</span>
             <span class="updated_at">{{timestampToCn(item.updated_at)}}</span>
             <div class="data_bar">
               <div class="view_count_box">
@@ -144,16 +143,12 @@ onMounted(async () => {
     border-radius: .5rem;
   }
 }
-.work_info {
+.info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  .work_title {
+  .title {
     font-size: 1.2rem;
-  }
-  .work_time {
-    display: flex;
-    flex-direction: column;
   }
   .data_bar {
     display: flex;

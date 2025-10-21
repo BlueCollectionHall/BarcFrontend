@@ -8,7 +8,6 @@ import {onMounted, ref, watch} from "vue";
 const userPinia = useUserPinia();
 
 const {userArchive} = storeToRefs(userPinia);
-const isManager = ref<boolean>(false);
 
 interface ItemImpl {label: string; value: string; identity: string; permission: number; icon?: string;}
 const items: Array<ItemImpl> = [
