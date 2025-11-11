@@ -16,7 +16,7 @@ const route = useRoute();
 interface ItemImpl {label: string; value: string; icon: string; is_self: boolean}
 
 const items: Array<ItemImpl> = [
-  {label: "账号修改", value: "Edit", icon: "SettingOutlined", is_self: true},
+  {label: "账号修改", value: "UpdateAccount", icon: "SettingOutlined", is_self: true},
   {label: "上传作品", value: "UploadWork", icon: "ArrowUpOutlined", is_self: true},
   {label: "内容管理", value: "Manage", icon: "SlidersOutlined", is_self: true},
   {label: "投诉此人", value: "FeedbackUser", icon: "AlertOutlined", is_self: false},
@@ -42,6 +42,9 @@ const itemClicked = (itemValue: string) => {
       router.push({name: itemValue, query: {username: routeUsername.value}});
       break;
     } case "Manage": {
+      router.push({name: itemValue});
+      break;
+    } case "UpdateAccount": {
       router.push({name: itemValue});
       break;
     }

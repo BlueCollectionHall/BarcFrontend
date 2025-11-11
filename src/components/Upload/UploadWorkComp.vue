@@ -204,11 +204,11 @@ const handleContentImageChange = (e: Event) => {
   if (!input.files) return;
   const files = Array.from(input.files);
   // 生成预览URL
-  // const newImages: Array<ImageItemImpl> = files.map(file => ({file, previewURL: URL.createObjectURL(file)}));
-  // contentImageList.value = [...contentImageList.value, ...newImages];
+  // const newImages = files.map(file => ({file, previewURL: URL.createObjectURL(file)}));
+  contentImageFileList.value = [...contentImageFileList.value, ...files];
   // 将数组写入ref数据
-  contentImageFileList.value = files;
-  contentImagePreviewList.value = files.map((file: File) => URL.createObjectURL(file));
+  // contentImageFileList.value = files;
+  contentImagePreviewList.value = contentImageFileList.value.map((file: File) => URL.createObjectURL(file));
 }
 
 const deleteContentImageByIndex = (index: number) => {
