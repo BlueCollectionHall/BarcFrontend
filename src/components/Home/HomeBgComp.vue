@@ -15,6 +15,7 @@ const imagesName: ImageNameImpl = {
 }
 
 const imageName = ref<string | null>(null);
+const bg_box = ref<HTMLDivElement | null>(null);
 
 const selectImage = () => {
   const date: Date = new Date();
@@ -33,15 +34,21 @@ const selectImage = () => {
 }
 onMounted(() => {
   selectImage();
+  if (bg_box.value && imageName.value) {
+    bg_box.value.style.backgroundImage = `url("${imageName.value}")`;
+  }
 })
 </script>
 
 <template>
-  <div class="bg_box">
-    <img class="bgi" v-if="imageName" :src="imageName" alt="bg">
+  <div ref="bg_box" class="bg_box">
+<!--    <img class="bgi" v-if="imageName" :src="imageName" alt="bg">-->
   </div>
 </template>
 
 <style scoped>
-
+.bg_box {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 </style>
