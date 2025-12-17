@@ -2,13 +2,15 @@
 import {onMounted, ref} from "vue";
 import {errorMessage, successMessage} from "@/utils/MessageAlert.ts";
 import {useRouter} from "vue-router";
-import {
-  ExclamationCircleOutlined,
-  EyeInvisibleOutlined,
-  EyeOutlined
-} from "@ant-design/icons-vue";
 import {storeToRefs} from "pinia";
 const router = useRouter();
+
+interface ResetPasswordFormImpl {
+  unique_id: string;
+  email: string;
+  password: string;
+  code: string;
+}
 
 const menuStatus = ref<string>("UpdateAccountBasic");
 
