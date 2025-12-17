@@ -1,9 +1,48 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {SoundOutlined} from '@ant-design/icons-vue';
+import type {NoticeImpl} from "@/interfaces/NoticeImpl.ts";
+import {baseHttp} from "@/utils/https.ts";
+import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
+import {errorMessage} from "@/utils/MessageAlert.ts";
+import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
+import {timestampToCn} from "../../utils/TimeToCn.ts";
 
-const noticeList = ref<Array<string>>([]);
+const noticeList = ref<Array<NoticeImpl>>([]);
+const userArchive = ref<UserArchiveImpl | null>(null);
 
+const fetchLatestNotice = async () => {
+  try {
+    const response = await baseHttp.get("/notice/latest", {params: {day: 30}});
+    const data: ResponseImpl = response.data;
+    if (data.code === 0) {
+      noticeList.value = data.data;
+      if (noticeList.value.length !== 0) {
+        await fetchUserArchive(noticeList.value[0].author);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    errorMessage("公告组件出现异常");
+  }
+}
+
+const fetchUserArchive = async (uuid: string) => {
+  try {
+    const response = await baseHttp.get("/user/current_by_uuid", {params: {uuid}});
+    const data: ResponseImpl = response.data;
+    if (data.code === 0) {
+      userArchive.value = data.data;
+    }
+  } catch (error) {
+    console.error(error);
+    errorMessage("公告组件出现异常:USER");
+  }
+}
+
+onMounted(() => {
+  fetchLatestNotice();
+})
 </script>
 
 <template>
@@ -19,7 +58,19 @@ const noticeList = ref<Array<string>>([]);
       <span>暂无数据</span>
     </div>
     <div class="notices" v-else>
-
+      <div class="notice" v-for="item in noticeList" :key="item.id">
+        <div class="title">
+          <h3>{{item.title}}</h3>
+          <div class="nickname_time">
+            <span class="nickname" v-if="userArchive">发布者：{{userArchive.nickname}}</span>
+            <span class="nickname" v-else>未知发布者</span>
+            <span class="updated_at">编辑于：{{timestampToCn(item.updated_at)}}</span>
+          </div>
+        </div>
+        <div class="content">
+          {{item.content}}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +80,25 @@ const noticeList = ref<Array<string>>([]);
   background-color: white;
   padding: 1rem;
   min-height: 10rem;
+  .notices {
+    padding: 1rem;
+    .notice {
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-bottom: #9b9b9b 1px solid;
+        padding: 0 0 1rem 0;
+        .nickname_time {
+          .nickname {
+            margin-right: 1rem;
+          }
+          font-size: 1rem;
+        }
+      }
+    }
+  }
 }
 .title {
   display: flex;
