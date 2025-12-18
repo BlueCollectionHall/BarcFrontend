@@ -6,7 +6,10 @@ import {baseHttp} from "@/utils/https.ts";
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {errorMessage} from "@/utils/MessageAlert.ts";
 import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
-import {timestampToCn} from "../../utils/TimeToCn.ts";
+import {timestampToCn} from "@/utils/TimeToCn.ts";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const noticeList = ref<Array<NoticeImpl>>([]);
 const userArchive = ref<UserArchiveImpl | null>(null);
@@ -40,6 +43,10 @@ const fetchUserArchive = async (uuid: string) => {
   }
 }
 
+const moreClicked = () => {
+  router.push({name: "Notice"});
+}
+
 onMounted(() => {
   fetchLatestNotice();
 })
@@ -51,7 +58,7 @@ onMounted(() => {
 <!--      <img class="icon" src="https://static.kivo.wiki/images/gallery/D2.%E6%B8%B8%E6%88%8F%E5%86%85%E6%9D%82%E9%A1%B9/Category/Emoticon_Exclamation.png" alt="icon"/>-->
       <SoundOutlined />
       最新公告
-      <a-button class="more_button" ghost type="primary">更多</a-button>
+      <a-button class="more_button" ghost type="primary" @click="moreClicked">更多</a-button>
     </div>
     <div class="notices no_list" v-if="noticeList.length === 0">
       <img class="icon" src="https://static.kivo.wiki/images/gallery/4.%E5%AE%98%E6%96%B9-%E8%A1%A8%E6%83%85%E5%8C%85/%E7%8E%A9%E6%89%8B%E6%9C%BA_09.gif" alt="icon"/>
