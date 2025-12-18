@@ -74,8 +74,7 @@ onMounted(() => {
             <span class="updated_at">编辑于：{{timestampToCn(item.updated_at)}}</span>
           </div>
         </div>
-        <div class="content">
-          {{item.content}}
+        <div class="content" v-html="item.content">
         </div>
       </div>
     </div>
@@ -87,6 +86,8 @@ onMounted(() => {
   background-color: white;
   padding: 1rem;
   min-height: 10rem;
+  max-height: 20rem;
+  overflow: auto;
   .notices {
     padding: 1rem;
     .notice {
