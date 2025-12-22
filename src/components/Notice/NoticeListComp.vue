@@ -13,13 +13,13 @@ const router = useRouter();
 interface NoticeNicknameImpl extends NoticeImpl {nickname: string; avatar: string}
 
 const noticeList = ref<Array<NoticeNicknameImpl>>([]);
-const pageRequest = ref<PageRequestImpl>({page_size: 10, page_num: 1});
+const pageRequest = ref<PageRequestImpl>({page_size: 5, page_num: 1});
 const pageResult = ref<PageResultImpl<NoticeNicknameImpl> | null>(null);
 
 // 分页获取公告
 const fetchNotice = async () => {
   try {
-    const response = await baseHttp.post("/notice/notices_by_page", pageRequest);
+    const response = await baseHttp.post("/notice/notices_by_page", pageRequest.value);
     const data: ResponseImpl = response.data;
     if (data.code === 0) {
       pageResult.value = data.data;
@@ -52,6 +52,12 @@ const itemClicked = (noticeId: string) => {
   router.push({name: "NoticeDetail", query: {notice_id: noticeId}});
 }
 
+// 分页切换处理
+const handlePageChange = (pageNum: number) => {
+  pageRequest.value.page_num = pageNum; // 更新当前页码
+  fetchNotice(); // 重新获取数据
+}
+
 onMounted(() => {
   fetchNotice();
 })
@@ -72,9 +78,24 @@ onMounted(() => {
     <img class="icon" src="https://static.kivo.wiki/images/gallery/E1.%E5%AE%98%E6%96%B9%E8%A1%A8%E6%83%85%E5%8C%85/Default/cafabb328c6564d3445ebaa00e1c510f.gif" alt="icon"/>
     <span class="text">暂无数据</span>
   </div>
+  <el-pagination class="pagination"
+                 background v-if="pageResult"
+                 :page-size="pageResult.page_size"
+                 :pager-count="pageResult.total_page"
+                 layout="prev, pager, next"
+                 :total="pageResult.total"
+                 :current-page="pageRequest.page_num"
+                 @current-change="handlePageChange"/>
 </template>
 
 <style scoped>
+.pagination {
+  margin-top: auto;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .notice_list_container {
   margin: 0 auto;
   width: 50%;
@@ -82,7 +103,7 @@ onMounted(() => {
     margin-top: 2rem;
   }
   .notice:last-child {
-    margin: 0;
+    margin: 0 0 2rem 0;
   }
   .notice:hover {
     background-color: rgba(255, 255, 255, 0.8);
