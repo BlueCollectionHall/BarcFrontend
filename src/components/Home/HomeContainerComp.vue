@@ -1,8 +1,4 @@
 <script setup lang="ts">
-
-import HomeTimeComp from "@/components/Home/HomeTimeComp.vue";
-import HomeSelectItemComp
-  from "@/components/Home/HomeSelectItemComp.vue";
 import HomeMessageComp from "@/components/Home/HomeMessageComp.vue";
 import HomeUpdatedComp from "@/components/Home/HomeUpdatedComp.vue";
 import HomeJoinComp from "@/components/Home/HomeJoinComp.vue";
@@ -10,6 +6,7 @@ import HomeNoticeComp from "@/components/Home/HomeNoticeComp.vue";
 import HomeArticleComp from "@/components/Home/HomeArticleComp.vue";
 import HomeFriendshipComp
   from "@/components/Home/HomeFriendshipComp.vue";
+import HomeSearchComp from "@/components/Home/HomeSearchComp.vue";
 </script>
 
 <template>
@@ -17,7 +14,8 @@ import HomeFriendshipComp
     <div class="c1">
       <div class="c1_left">
 <!--        <HomeTimeComp/>-->
-        <HomeSelectItemComp/>
+<!--        <HomeSelectItemComp/>-->
+        <HomeSearchComp/>
         <HomeMessageComp/>
       </div>
       <div class="c1_right">
