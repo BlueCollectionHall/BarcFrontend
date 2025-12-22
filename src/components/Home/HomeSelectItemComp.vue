@@ -21,7 +21,7 @@ const itemList: Array<{label: string; value: string; logo: string}> = [
   flex-direction: row;
   gap: 1rem;
   justify-content: space-evenly;
-  background: linear-gradient(rgba(255, 255, 255, 1) 30%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 90%);
 }
 .select_items .item {
   padding: .5rem;

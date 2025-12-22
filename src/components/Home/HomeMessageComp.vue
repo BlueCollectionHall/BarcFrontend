@@ -68,7 +68,7 @@ const uploadNewMessage = async (): Promise<void> => {
     const data: ResponseImpl = response.data;
     if (data.code === 0) {
       successMessage(data.data);
-      await fetchMessage(3);
+      await fetchMessage(5);
     }
     else errorMessage(data.msg);
   } catch (error) {
@@ -84,7 +84,7 @@ const clickedToView = () => {
 }
 
 onMounted(async () => {
-  await fetchMessage(3);
+  await fetchMessage(5);
 })
 </script>
 

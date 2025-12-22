@@ -16,7 +16,7 @@ import HomeFriendshipComp
   <div class="container">
     <div class="c1">
       <div class="c1_left">
-        <HomeTimeComp/>
+<!--        <HomeTimeComp/>-->
         <HomeSelectItemComp/>
         <HomeMessageComp/>
       </div>
