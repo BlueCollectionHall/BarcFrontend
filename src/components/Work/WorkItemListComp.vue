@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {useWorkItemListPinia} from "@/stores/WorkItemListPinia.ts";
-import {storeToRefs} from "pinia";
+import {computed} from "vue";
 
 const workItemListPinia = useWorkItemListPinia();
 
-const {workList} = storeToRefs(workItemListPinia);
+const workList = computed(() => workItemListPinia.workList);
 
 </script>
 

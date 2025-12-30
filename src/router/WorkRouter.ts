@@ -1,5 +1,5 @@
 import WorkView from "@/views/WorkView.vue";
-import WorkAllComp from "@/components/Work/WorkAllComp.vue";
+import WorkGeneralComp from "@/components/Work/WorkGeneralComp.vue";
 import WorkUserComp from "@/components/Work/WorkUserComp.vue";
 
 export default {
@@ -10,7 +10,22 @@ export default {
     {
       path: "all",
       name: "WorkAll",
-      component: WorkAllComp
+      component: WorkGeneralComp
+    },
+    {
+      path: "school",
+      name: "WorkSchool",
+      component: WorkGeneralComp
+    },
+    {
+      path: "club",
+      name: "WorkClub",
+      component: WorkGeneralComp
+    },
+    {
+      path: "student",
+      name: "WorkStudent",
+      component: WorkGeneralComp
     },
     {
       path: "user",

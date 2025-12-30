@@ -1,37 +1,48 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
+import {useRouter, useRoute} from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
 
 interface ItemImpl {
-  label: string; value: string; icon?: string; router: string;
+  label: string; icon?: string; router: string;
 }
 
 const items: Array<ItemImpl> = [
-  {label: "综合", value: "all", router: "WorkAll"},
-  {label: "标题", value: "title", router: "WorkTitle"},
-  {label: "学园", value: "school", router: "WorkSchool"},
-  {label: "部团", value: "club", router: "WorkClub"},
-  {label: "学生", value: "student", router: "WorkStudent"},
-  {label: "用户", value: "user", router: "WorkUser"},
+  {label: "综合", router: "WorkAll"},
+  {label: "学园", router: "WorkSchool"},
+  {label: "部团", router: "WorkClub"},
+  {label: "学生", router: "WorkStudent"},
+  {label: "用户", router: "WorkUser"},
 ]
 
-const selectedItemValue = ref<string>("all");
+const selectedRouter = ref<string>("WorkAll");
 
-const itemClicked = (target: string, value: string) => {
-  selectedItemValue.value = value;
-  router.push({name: target});
+const itemClicked = (target: string) => {
+  selectedRouter.value = target;
+  if (route.query.keyword) {
+    router.push({name: target, query: {keyword: route.query.keyword}});
+  } else {
+    router.push({name: target});
+  }
 }
+
+onMounted(() => {
+  const routerName = route.name as string | undefined;
+  if (routerName) {
+    selectedRouter.value = routerName;
+  }
+})
 </script>
 
 <template>
   <div class="items">
     <div
-      :class="'item' + (selectedItemValue === item.value ? ' selected' : '')"
+      :class="'item' + (selectedRouter === item.router ? ' selected' : '')"
       v-for="item in items"
-      :key="item.value"
-      @click="itemClicked(item.router, item.value)"
+      :key="item.router"
+      @click="itemClicked(item.router)"
     >
       {{item.label}}
     </div>
