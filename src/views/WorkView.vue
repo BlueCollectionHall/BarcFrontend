@@ -37,13 +37,13 @@ onMounted(() => {
 
 <style scoped>
 .top_box {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2rem;
   border-bottom: #9b9b9b50 1px solid;
+  margin-bottom: 2rem;
 }
 .no_query {
   height: calc(100vh - 90px);

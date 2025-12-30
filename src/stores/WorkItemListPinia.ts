@@ -13,7 +13,7 @@ export const useWorkItemListPinia = defineStore("work_item_list", () => {
   const workList = ref<Array<WorkImpl>>([]);
   const statusInPinia = ref<"PUBLIC" | "PRIVATE" | "BAN" | "OFF">("PUBLIC");
   const pageResult = ref<PageResultImpl<WorkImpl> | null>(null);
-  const pageRequest = ref<PageRequestImpl>({page_num: 1, page_size: 10});
+  const pageRequest = ref<PageRequestImpl>({page_num: 1, page_size: 24});
 
   const route = useRoute();
   /**
@@ -79,5 +79,5 @@ export const useWorkItemListPinia = defineStore("work_item_list", () => {
       }
     }
   }
-  return {workList, pageResult, fetchWorkList};
+  return {workList, pageResult, pageRequest, fetchWorkList};
 });
