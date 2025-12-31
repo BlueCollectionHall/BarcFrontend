@@ -102,11 +102,11 @@ onMounted(async () => {
       <a-button type="primary" style="background-color: #fda5bc; color: white; height: 2rem" @click="clickedToView">更多</a-button>
     </div>
     <div class="messages" v-if="messageList">
-      <div v-for="item in messageList" :key="item.id" style="margin-top: .5rem; display: flex; align-items: center; gap: .5rem;">
-        <img style="width: 3.4rem; border: #fda5bc 2px solid; border-radius: 1rem" :src="item.userInfo?.avatar || ''" alt="avatar"/>
-        <div style="display: flex; flex-direction: column; gap: .3rem;">
-          <span style="font-weight: bold; color: #fe4b7b">{{item.userInfo?.nickname || '未知昵称'}}</span>
-          <span style="background-color: #fda5bc; padding: .3rem; border-radius: .5rem; color: white">{{item.content}}</span>
+      <div class="message" v-for="item in messageList" :key="item.id">
+        <img class="avatar" :src="item.userInfo?.avatar || ''" alt="avatar"/>
+        <div class="nickname_content">
+          <span class="nickname">{{item.userInfo?.nickname || '未知昵称'}}</span>
+          <span class="content">{{item.content}}</span>
         </div>
       </div>
     </div>
@@ -131,5 +131,36 @@ onMounted(async () => {
   font-size: 1.2rem;
   color: white;
   border-radius: .4rem;
+}
+.message {
+  margin-top: .5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  .avatar {
+    width: 3.4rem;
+    border: #fda5bc 2px solid;
+    border-radius: 1rem;
+  }
+  .nickname_content {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    .nickname {
+      font-weight: bold;
+      color: #fe4b7b;
+    }
+    .content:hover {
+      background-color: #fda5bc;
+      cursor: default;
+    }
+    .content {
+      transition: .3s ease;
+      background-color: #fda5bc90;
+      padding: .3rem;
+      border-radius: .5rem;
+      color: white;
+    }
+  }
 }
 </style>

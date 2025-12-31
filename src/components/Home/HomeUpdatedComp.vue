@@ -54,7 +54,7 @@ onMounted(async () => {
 .updated_box {
   padding: 1rem;
   width: 100%;
-  height: 20rem;
+  height: 30rem;
   background-color: #ffffff90;
   box-shadow: 0 0 .05rem .05rem rgb(0 0 0 / 5%);
   display: flex;

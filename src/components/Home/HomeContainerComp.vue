@@ -20,7 +20,7 @@ import HomeSearchComp from "@/components/Home/HomeSearchComp.vue";
       </div>
       <div class="c1_right">
         <HomeUpdatedComp/>
-        <HomeJoinComp/>
+<!--        <HomeJoinComp/>-->
       </div>
     </div>
     <div class="c2 c">

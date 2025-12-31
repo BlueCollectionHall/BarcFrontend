@@ -14,6 +14,8 @@ const imagesName: ImageNameImpl = {
   night: ['bg_night_hina_1.jpg'],
 }
 
+const newYearImagesName: Array<string> = ['newyear_1.jpg', 'newyear_2.jpg'];
+
 const imageName = ref<string | null>(null);
 const bg_box = ref<HTMLDivElement | null>(null);
 
@@ -29,6 +31,10 @@ const selectImage = () => {
     imageName.value = baseUrl + imagesName.eventing[Math.floor(Math.random() * imagesName.eventing.length)];
   } else {
     imageName.value = baseUrl + imagesName.night[Math.floor(Math.random() * imagesName.night.length)];
+  }
+  // 大于等于12月 或者小于等于2月（新年期间）
+  if (11 <= date.getMonth() || date.getMonth() <= 1) {
+    imageName.value = baseUrl + newYearImagesName[Math.floor(Math.random() * newYearImagesName.length)];
   }
   console.log(imageName.value);
 }
