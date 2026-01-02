@@ -4,6 +4,7 @@ import AccountHeaderComp from "@/components/Account/AccountHeaderComp.vue";
 import {onMounted, ref} from "vue";
 import {errorMessage} from "@/utils/MessageAlert.ts";
 import {useRoute} from "vue-router";
+import HomeBgComp from "@/components/Home/HomeBgComp.vue";
 const route = useRoute();
 
 const isToken = ref<boolean>(false);
@@ -17,7 +18,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg_box"></div>
+<!--  <div class="bg_box"></div>-->
+  <HomeBgComp/>
   <AccountHeaderComp/>
   <RouterView v-if="isRouterRight"/>
   <div v-else>

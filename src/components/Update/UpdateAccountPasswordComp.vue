@@ -78,7 +78,11 @@ const resetPassword = async () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="change">
+    <div class="title">
+      <h3>修改密码</h3>
+      <span>通过输入原密码以及验证码，更换新密码</span>
+    </div>
     <el-form :model="form" label-width="auto" @submit.prevent="resetPassword">
       <el-form-item label="新密码：">
         <div style="display: flex; width: 100%; gap: 1rem">
@@ -92,8 +96,17 @@ const resetPassword = async () => {
       <el-button native-type="submit" type="primary">确认修改</el-button>
     </el-form>
   </div>
+
 </template>
 
 <style scoped>
-
+.title {
+  margin-bottom: 2rem;
+  span {
+    font-size: .9rem;
+  }
+}
+.change {
+  margin-bottom: 4rem;
+}
 </style>
