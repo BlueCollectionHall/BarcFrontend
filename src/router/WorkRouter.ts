@@ -1,6 +1,7 @@
 import WorkView from "@/views/WorkView.vue";
 import WorkGeneralComp from "@/components/Work/WorkGeneralComp.vue";
 import WorkUserComp from "@/components/Work/WorkUserComp.vue";
+import WorkDetailComp from "@/components/Work/WorkDetailComp.vue";
 
 export default {
   path: "/work",
@@ -31,6 +32,11 @@ export default {
       path: "user",
       name: "WorkUser",
       component: WorkUserComp
-    }
+    },
+    {
+      path: "detail",
+      name: "WorkDetail",
+      component: WorkDetailComp
+    },
   ]
 }

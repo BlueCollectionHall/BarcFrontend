@@ -48,3 +48,11 @@ export interface WorkCategoryImpl {
   category_id: string;
   created_at: Date;
 }
+
+export interface WorkImageImpl {
+  id: string;
+  work_id: string;
+  sort: number;
+  object_key: string;
+  created_at: Date;
+}

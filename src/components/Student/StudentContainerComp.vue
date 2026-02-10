@@ -1,25 +1,40 @@
 <script setup lang="ts">
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import type {WorkImpl} from "@/interfaces/WorkImpl.ts";
 import {baseHttp} from "@/utils/https.ts";
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {errorMessage, infoMessage} from "@/utils/MessageAlert.ts";
 import {EyeOutlined, HeartOutlined} from "@ant-design/icons-vue";
+import type {PageRequestImpl, PageResultImpl} from "@/interfaces/PageImpl.ts";
+
 const route = useRoute();
+const router = useRouter();
 
 const works = ref<Array<WorkImpl>>([]);
+const requestPage = ref<PageRequestImpl>({page_num: 1, page_size: 12});
+const resultPage = ref<PageResultImpl<WorkImpl> | null>(null);
 
 const fetchWorks = async (student_id: string) => {
+  requestPage.value.params = {student_id};
+  console.log("this is params ed requestPage: ", requestPage.value);
   try {
-    const response = await baseHttp.get("/api/work/works_by_student", {params: {status: "PUBLIC", student_id: student_id}});
+    const response = await baseHttp.post("/api/work/works_by_page", requestPage.value, {
+      params: {status: "PUBLIC"}
+    });
     const data: ResponseImpl = response.data;
     if (data.code === 0) {
-      works.value = data.data;
-    } else infoMessage(data.msg);
-  } catch {
-    errorMessage("网络错误！");
+      resultPage.value = data.data;
+      works.value = resultPage.value?.list || [];
+    } else infoMessage(data.data);
+  } catch (error) {
+    console.error(error);
+    errorMessage("网络异常");
   }
+}
+
+const workItemClicked = (work_id: string) => {
+  router.push({name: "WorkDetail", query: {work_id}});
 }
 
 onMounted(async () => {
@@ -33,7 +48,7 @@ onMounted(async () => {
 <template>
   <div class="container" v-if="works.length > 0">
     <div class="items">
-      <div class="item" v-for="item in works" :key="item.id">
+      <div class="item" v-for="item in works" :key="item.id" @click="workItemClicked(item.id)">
         <div class="cover_box">
           <img class="cover_image" :src="item.cover_image" alt="cover"/>
           <div class="cover_z">
@@ -80,7 +95,12 @@ onMounted(async () => {
   justify-content: start; /* 改为左对齐 */
   gap: 3rem 3rem;
 }
+.item:hover {
+  cursor: pointer;
+  transform: translateY(-.5rem);
+}
 .item {
+  transition: .3s ease;
   flex: 0 0 calc(20% - 1.5rem);
 }
 .cover_box {

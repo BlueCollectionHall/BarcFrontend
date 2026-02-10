@@ -9,6 +9,7 @@ import WorkNoQueryComp from "@/components/Work/WorkNoQueryComp.vue";
 const route = useRoute();
 
 const isQuery = ref<boolean>(false);
+const isDetail = ref<boolean>(false);
 
 // 查看组件是否含参
 const seeQueryObject = () => {
@@ -16,22 +17,36 @@ const seeQueryObject = () => {
   isQuery.value = Object.keys(queries).length > 0;
 }
 
+const seeDetail = () => {
+  const routerName = route.name as string | undefined;
+  if (!routerName) {
+    return;
+  }
+  if (routerName === 'WorkDetail') isDetail.value = true;
+}
+
 onMounted(() => {
   seeQueryObject();
+  seeDetail();
 })
 </script>
 
 <template>
   <HeaderComp/>
-  <div class="is_query" v-if="isQuery">
-    <div class="top_box">
-      <WorkSearchBarComp/>
-      <WorkTypeComp/>
-    </div>
+  <div class="is_detail" v-if="isDetail">
     <RouterView/>
   </div>
-  <div class="no_query" v-else>
-    <WorkNoQueryComp/>
+  <div class="no_detail" v-else>
+    <div class="is_query" v-if="isQuery">
+      <div class="top_box">
+        <WorkSearchBarComp/>
+        <WorkTypeComp/>
+      </div>
+      <RouterView/>
+    </div>
+    <div class="no_query" v-else>
+      <WorkNoQueryComp/>
+    </div>
   </div>
 </template>
 
