@@ -1,15 +1,35 @@
 <script setup lang="ts">
 import {EyeOutlined, HeartOutlined} from "@ant-design/icons-vue";
-import {useAccountContentPinia} from "@/stores/AccountContentPinia.ts";
+import {useAccountWorkItemPinia} from "@/stores/AccountWorkItemListPinia.ts";
 import {storeToRefs} from "pinia";
-const accountContentPinia = useAccountContentPinia();
+import {ref} from "vue";
+import type {PageRequestImpl} from "@/interfaces/PageImpl.ts";
+import {useRoute, useRouter} from "vue-router";
 
-const {workList} = storeToRefs(accountContentPinia);
+const router = useRouter();
+const route = useRoute();
+const accountContentPinia = useAccountWorkItemPinia();
+
+const {pageResult, pageRequest} = storeToRefs(accountContentPinia);
+
+const handlePageChange = (pageNum: number) => {
+  if (pageNum === 1) {
+    const query = {...route.query};
+    delete query.page_num;
+    router.push({query})
+  } else {
+    router.push({query: {...route.query, page_num: pageNum}});
+  }
+}
+
+const itemClicked = (workId: string) => {
+  router.push({name: "WorkDetail", query: {work_id: workId}});
+}
 </script>
 
 <template>
-  <div class="work_list_box" v-if="workList.length > 0">
-    <div class="item" v-for="item in workList" :key="item.id">
+  <div class="work_list_box" v-if="pageResult && pageResult.list.length > 0">
+    <div class="item" v-for="item in pageResult.list" :key="item.id" @click="itemClicked(item.id)">
       <div class="cover_box">
         <img class="cover_image" :src="item.cover_image" alt="cover"/>
         <div class="cover_z">
@@ -19,6 +39,16 @@ const {workList} = storeToRefs(accountContentPinia);
       {{item.title}}
     </div>
   </div>
+  <el-pagination
+    class="pagination"
+    background
+    layout="prev, pager, next"
+    :total="pageResult.total"
+    :page-size="pageResult.page_size"
+    :pager-count="pageResult.total_page"
+    :current-page="pageRequest.page_num"
+    @current-change="handlePageChange"
+    v-if="pageResult" />
 </template>
 
 <style scoped>
@@ -40,7 +70,12 @@ const {workList} = storeToRefs(accountContentPinia);
   content: "";
   flex: auto;
 }
+.item:hover {
+  cursor: pointer;
+  transform: translateY(-.5rem);
+}
 .item {
+  transition: .3s ease;
   flex: 0 0 calc(20% - 1.5rem);
 }
 .cover_box {
@@ -61,5 +96,11 @@ const {workList} = storeToRefs(accountContentPinia);
   position: absolute;
   bottom: 0;
   padding: .4rem 0 .4rem .8rem;
+}
+.pagination {
+  padding-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -1,32 +1,42 @@
 <script setup lang="ts">
-import {useAccountContentPinia} from "@/stores/AccountContentPinia.ts";
+import {useAccountWorkItemPinia} from "@/stores/AccountWorkItemListPinia.ts";
 import {storeToRefs} from "pinia";
-const accountContentPinia = useAccountContentPinia();
-import {useRoute} from "vue-router";
+const accountWorkItemPinia = useAccountWorkItemPinia();
+import {type LocationQuery, useRoute, useRouter} from "vue-router";
 import {errorMessage} from "@/utils/MessageAlert.ts";
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
+
 const route = useRoute();
+const router = useRouter();
 
 interface ItemImpl {label: string; value: string; icon: string; color: string}
 
 const itemList: Array<ItemImpl> = [
   {label: "作品集", value: "works", icon: "HighlightOutlined", color: "#0EB350"},
   {label: "收录集", value: "collections", icon: "ReadOutlined", color: "#40C5F1"},
-  {label: "喜欢", value: "likes", icon: "HeartOutlined", color: "#F85A54"},
+  // {label: "喜欢", value: "likes", icon: "HeartOutlined", color: "#F85A54"},
 ];
 
-const {selectedItemValue} = storeToRefs(accountContentPinia);
+// const {selectedItemValue} = storeToRefs(accountWorkItemPinia);
+const selectedItem = ref<string>('works');
 
 const changeSelect = (target: string) => {
-  accountContentPinia.changeSelected(target);
+  selectedItem.value = target;
   if (route.query.username) {
-    accountContentPinia.fetchWorks(route.query.username as string);
+    router.replace({query: {...route.query, type: target}});
+    delete route.query.page_num;
+    // accountWorkItemPinia.fetchWorks(route.query.username as string);
   } else errorMessage("页面缺少重要数据！");
 }
 
 onMounted(() => {
+  router.replace({query: {...route.query, type: selectedItem.value}});
+  accountWorkItemPinia.fetchWorks(route.query.username as string);
+})
+
+watch(() => route.query, () => {
   if (route.query.username) {
-    accountContentPinia.fetchWorks(route.query.username as string);
+    accountWorkItemPinia.fetchWorks(route.query.username as string);
   }
 })
 </script>
@@ -36,9 +46,9 @@ onMounted(() => {
     <div class="items">
       <div class="item" v-for="item in itemList" :key="item.value" @click="changeSelect(item.value)">
         <component class="icon" :is="item.icon" :style="{'color': item.color}"/>
-        <div :class="selectedItemValue === item.value? 'item_selected': ''">{{item.label}}</div>
+        <div :class="selectedItem === item.value? 'item_selected': ''">{{item.label}}{{item.value}}</div>
       </div>
-      <div style="margin-right: auto">施工中</div>
+<!--      <div style="margin-right: auto">施工中</div>-->
     </div>
   </div>
 </template>
