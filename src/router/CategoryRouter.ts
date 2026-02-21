@@ -1,4 +1,5 @@
 import CategoryView from "@/views/CategoryView.vue";
+import WorkCategoryGeneralComp from "@/components/Work/Category/WorkCategoryGeneralComp.vue";
 
 export default {
   path: "/category",
@@ -8,7 +9,8 @@ export default {
     {
       path: ":category_id",
       props: true,
-      name: "CategoryOnly"
+      name: "CategoryOnly",
+      component: WorkCategoryGeneralComp
     }
   ]
 }

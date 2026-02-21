@@ -1,11 +1,20 @@
 <script setup lang="ts">
-
 import {ref} from "vue";
+import {useRouter, useRoute} from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
 
 const keyword = ref<string>("");
 
 const searchClicked = () => {
-
+  if (keyword.value.length === 0) {
+    const query = {...route.query};
+    delete query.keyword;
+    router.push({ query });
+  } else {
+    router.push({query: {keyword: keyword.value}});
+  }
 }
 </script>
 

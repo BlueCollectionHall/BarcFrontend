@@ -2,15 +2,22 @@
 import {EyeOutlined, HeartOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {storeToRefs} from "pinia";
 import {useWorkItemListPinia} from "@/stores/WorkItemListPinia.ts";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const workItemListPinia = useWorkItemListPinia();
 
 const {workList} = storeToRefs(workItemListPinia);
+
+const itemClicked = (workId: string) => {
+  router.push({name: "WorkDetail", query: {work_id: workId}});
+}
 </script>
 
 <template>
   <div class="work_list_box" v-if="workList.length > 0">
-    <div class="item" v-for="item in workList" :key="item.id">
+    <div class="item" v-for="item in workList" :key="item.id" @click="itemClicked(item.id)">
       <div class="cover_box">
         <img class="cover_image" :src="item.cover_image" alt="cover"/>
         <div class="cover_z">
@@ -56,7 +63,12 @@ const {workList} = storeToRefs(workItemListPinia);
   content: "";
   flex: auto;
 }
+.item:hover {
+  transform: translateY(-.5rem);
+  cursor: pointer;
+}
 .item {
+  transition: .3s ease;
   flex: 0 0 calc(20% - 1.5rem);
   .title_nickname {
     display: flex;

@@ -40,7 +40,7 @@ onMounted(() => {
 
     <!--  menu  -->
     <div class="menu-container" v-if="category">
-      <router-link v-for="item in category" :key="item.id" class="menu-item" :to="item.id">{{item.name}}</router-link>
+      <router-link v-for="item in category" :key="item.id" class="menu-item" :to="`/category/${item.id}`">{{item.name}}</router-link>
 <!--      <router-link class="menu-item" to="/" active-class="active">主页</router-link>-->
 <!--      <router-link class="menu-item" to="/works" active-class="active">作品</router-link>-->
 <!--      <router-link class="menu-item" to="/about" active-class="active">关于</router-link>-->
