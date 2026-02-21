@@ -12,6 +12,7 @@ import ManageRouter from "@/router/ManageRouter.ts";
 import UpdateRouter from "@/router/UpdateRouter.ts";
 import NoticeRouter from "@/router/NoticeRouter.ts";
 import WorkRouter from "@/router/WorkRouter.ts";
+import CategoryRouter from "@/router/CategoryRouter.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,7 @@ const router = createRouter({
     UpdateRouter,
     NoticeRouter,
     WorkRouter,
+    CategoryRouter,
   ],
 })
 

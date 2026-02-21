@@ -14,7 +14,7 @@ const {userArchive, userBasic} = storeToRefs(userPinia);
 
 const fetchCategory = async () => {
   await baseHttp ({
-    url: "/api/category/all",
+    url: "/api/category/all_top_categories",
     method: "GET"
   }).then(res => {
     if (res.data.code === 0) {

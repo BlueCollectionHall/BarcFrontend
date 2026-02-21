@@ -14,7 +14,7 @@ const items: Array<ItemImpl> = [
   {label: "学园", router: "WorkSchool"},
   {label: "部团", router: "WorkClub"},
   {label: "学生", router: "WorkStudent"},
-  {label: "用户", router: "WorkUser"},
+  // {label: "用户", router: "WorkUser"},
 ]
 
 const selectedRouter = ref<string>("WorkAll");
