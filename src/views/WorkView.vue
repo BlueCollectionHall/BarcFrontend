@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HeaderComp from "@/components/HeaderFooter/HeaderComp.vue";
 import {useRoute, type LocationQuery} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import WorkSearchBarComp from "@/components/Work/WorkSearchBarComp.vue";
 import WorkTypeComp from "@/components/Work/WorkTypeComp.vue";
 import WorkNoQueryComp from "@/components/Work/WorkNoQueryComp.vue";
@@ -28,6 +28,10 @@ const seeDetail = () => {
 onMounted(() => {
   seeQueryObject();
   seeDetail();
+})
+
+watch(() => route.name, () => {
+  isDetail.value = route.name === 'WorkDetail';
 })
 </script>
 

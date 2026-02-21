@@ -3,6 +3,11 @@ import {EyeOutlined, HeartOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {storeToRefs} from "pinia";
 import {useWorkItemListPinia} from "@/stores/WorkItemListPinia.ts";
 import {useRouter} from "vue-router";
+import {baseHttp} from "@/utils/https.ts";
+import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
+import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
+import {errorMessage} from "@/utils/MessageAlert.ts";
+import {watch} from "vue";
 
 const router = useRouter();
 
@@ -10,9 +15,33 @@ const workItemListPinia = useWorkItemListPinia();
 
 const {workList} = storeToRefs(workItemListPinia);
 
+const handleWorkListAuthorNickname = async () => {
+  if (workList.value.length === 0) return;
+  for (let i = 0; i < workList.value.length; i++) {
+    if (workList.value[i].is_claim) {
+      await baseHttp.get("/user/current_by_uuid", {params: {uuid: workList.value[i].author}})
+        .then(res => {
+          const data: ResponseImpl = res.data;
+          if (data.code === 0) {
+            const userArchive: UserArchiveImpl = data.data;
+            workList.value[i].author_nickname = userArchive.nickname;
+          } else workList.value[i].author_nickname = "is_claim";
+        }).catch(error => {
+          console.error(error);
+          errorMessage("网络异常！");
+          workList.value[i].author_nickname = "is_claim";
+        })
+    }
+  }
+}
+
 const itemClicked = (workId: string) => {
   router.push({name: "WorkDetail", query: {work_id: workId}});
 }
+
+watch(() => workList.value, () => {
+  handleWorkListAuthorNickname();
+})
 </script>
 
 <template>
@@ -28,7 +57,7 @@ const itemClicked = (workId: string) => {
         <span class="title">{{item.title}}</span>
         <span class="nickname">
           <UserOutlined />
-          {{item.is_claim? 'isClaim': item.author_nickname}}
+          {{item.author_nickname}}
         </span>
       </div>
     </div>

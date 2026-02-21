@@ -7,6 +7,7 @@ import {baseHttp} from "@/utils/https.ts";
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {errorMessage, infoMessage} from "@/utils/MessageAlert.ts";
 import {EyeOutlined, HeartOutlined, UserOutlined} from "@ant-design/icons-vue";
+import type {UserArchiveImpl} from "@/interfaces/UserImpl.ts";
 
 const router = useRouter();
 const route = useRoute();
@@ -22,10 +23,31 @@ const fetchWorks = async () => {
     if (data.code === 0) {
       pageResult.value = data.data;
       workItems.value = pageResult.value?.list || [];
+      await handleWorkListAuthorNickname();
     } else infoMessage(data.data);
   } catch (error) {
     console.error(error);
     errorMessage("网络异常！");
+  }
+}
+
+const handleWorkListAuthorNickname = async () => {
+  if (workItems.value.length === 0) return;
+  for (let i = 0; i < workItems.value.length; i++) {
+    if (workItems.value[i].is_claim) {
+      await baseHttp.get("/user/current_by_uuid", {params: {uuid: workItems.value[i].author}})
+        .then(res => {
+          const data: ResponseImpl = res.data;
+          if (data.code === 0) {
+            const userArchive: UserArchiveImpl = data.data;
+            workItems.value[i].author_nickname = userArchive.nickname;
+          } else workItems.value[i].author_nickname = "is_claim";
+        }).catch(error => {
+          console.error(error);
+          errorMessage("网络异常！");
+          workItems.value[i].author_nickname = "is_claim";
+        })
+    }
   }
 }
 
@@ -81,7 +103,7 @@ watch(() => route.query, () => {
         <span class="title">{{item.title}}</span>
         <span class="nickname">
           <UserOutlined />
-          {{item.is_claim? 'isClaim': item.author_nickname}}
+          {{item.author_nickname}}
         </span>
       </div>
     </div>

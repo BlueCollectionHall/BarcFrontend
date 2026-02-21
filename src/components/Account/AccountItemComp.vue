@@ -46,7 +46,7 @@ watch(() => route.query, () => {
     <div class="items">
       <div class="item" v-for="item in itemList" :key="item.value" @click="changeSelect(item.value)">
         <component class="icon" :is="item.icon" :style="{'color': item.color}"/>
-        <div :class="selectedItem === item.value? 'item_selected': ''">{{item.label}}{{item.value}}</div>
+        <div :class="selectedItem === item.value? 'item_selected': ''">{{item.label}}</div>
       </div>
 <!--      <div style="margin-right: auto">施工中</div>-->
     </div>
