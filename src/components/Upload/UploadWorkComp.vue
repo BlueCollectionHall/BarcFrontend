@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import {nextTick, ref, watch} from "vue";
+import {nextTick, onBeforeMount, onMounted, ref, watch} from "vue";
 import type {WorkImpl} from "@/interfaces/WorkImpl.ts";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   QuestionCircleOutlined
 } from "@ant-design/icons-vue";
+
+// 生命周期钩子相关
+onMounted(() => {
+  fetchWorkCategories();
+})
 
 // 封面图相关
 import Cropper from 'cropperjs';
@@ -100,6 +105,23 @@ const workForm = ref<WorkImpl>({
 //   }
 // })
 
+// 获取所有作品顶级分类
+const workCategories = ref<Array<CategoryImpl>>([]);
+const selectCategory = ref<string | null>(null);
+
+const fetchWorkCategories = async () => {
+  await baseHttp.get("/api/category/all_top_categories")
+    .then(res => {
+      const data: ResponseImpl = res.data;
+      if (data.code === 0) {
+        workCategories.value = data.data;
+      } else errorMessage("获取所有分类信息失败！网络问题？请刷新界面！");
+    }).catch(err => {
+      console.error(err);
+      errorMessage("网络错误！");
+    });
+}
+
 // 获取作品所属学生ID
 const studentList = ref<Array<StudentImpl>>([]);
 const studentKeyword = ref<string | null>(null);
@@ -190,6 +212,7 @@ import {
 import type {ResponseImpl} from "@/interfaces/ResponseImpl.ts";
 import {baseHttp} from "@/utils/https.ts";
 import type {StudentImpl} from "@/interfaces/BaImpl.ts";
+import type {CategoryImpl} from "@/interfaces/CategoryImpl.ts";
 const contentImageInputRef = ref<HTMLInputElement | null>(null);
 
 const contentImageFileList = ref<Array<File>>([]);
@@ -254,6 +277,13 @@ const uploadWorkForm = async () => {
       content: content.value // 确保富文本内容被包含
     })
   );
+  // 添加分类信息
+  if (selectCategory.value && selectCategory.value.length > 0) {
+    formData.append(
+      "category_id",
+      selectCategory.value
+    );
+  }
   // 添加封面图（从裁切结果获取）
   const coverImageBlob = croppedImageFileValue.value.get("cover_image") as Blob;
   if (coverImageBlob) {
@@ -359,18 +389,34 @@ const uploadWorkForm = async () => {
           </el-form-item>
         </el-form>
       </div>
-      <div class="select_student_box box">
-        <h2 class="title">选择作品所属学生</h2>
-        <div class="select_student_bar">
-          <el-input placeholder="学生的中文或英文名" v-model="studentKeyword"/>
-          <el-button type="primary" @click="fetchStudentsByKeyword" native-type="button">搜索</el-button>
+      <div>
+        <div class="select_student_box box">
+          <h2 class="title">选择作品所属学生</h2>
+          <div class="select_student_bar">
+            <el-input placeholder="学生的中文或英文名" v-model="studentKeyword"/>
+            <el-button type="primary" @click="fetchStudentsByKeyword" native-type="button">搜索</el-button>
+          </div>
+          <div class="select_student_item_box" v-if="studentList.length > 0">
+            <el-button
+              v-for="item in studentList"
+              :key="item.id"
+              @click="workForm.student = item.id"
+              :type="workForm.student === item.id? 'primary': 'default'">{{item.cn_name}}</el-button>
+          </div>
         </div>
-        <div class="select_student_item_box" v-if="studentList.length > 0">
-          <el-button
-            v-for="item in studentList"
-            :key="item.id"
-            @click="workForm.student = item.id"
-            :type="workForm.student === item.id? 'primary': 'default'">{{item.cn_name}}</el-button>
+        <div class="select_category_box box">
+          <h2 class="title">选择作品所属分类</h2>
+          <div class="select_category_item_box" v-if="workCategories.length > 0">
+            <el-button @click="selectCategory = null" :type="selectCategory? 'default': 'primary'">无分类</el-button>
+            <el-button
+              v-for="item in workCategories"
+              :key="item.id"
+              @click="selectCategory = item.id"
+              :type="selectCategory === item.id? 'primary': 'default'">{{item.name}}</el-button>
+          </div>
+          <div v-else>
+            分类不存在
+          </div>
         </div>
       </div>
     </div>
