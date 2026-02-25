@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import type {WorkImpl} from "@/interfaces/WorkImpl.ts";
 import type {PageRequestImpl, PageResultImpl} from "@/interfaces/PageImpl.ts";
 import {type LocationQuery, useRoute, useRouter} from "vue-router";
@@ -15,19 +15,29 @@ const route = useRoute();
 const workItems = ref<Array<WorkImpl>>([]);
 const pageRequest = ref<PageRequestImpl>({page_num: 1, page_size: 24});
 const pageResult = ref<PageResultImpl<WorkImpl> | null>(null);
+const categoryId = ref<string | undefined>(undefined);
 
 const fetchWorks = async () => {
-  try {
-    const response = await baseHttp.post("/api/work/works_by_page", pageRequest.value, {params: {status: "PUBLIC"}});
-    const data: ResponseImpl = response.data;
-    if (data.code === 0) {
-      pageResult.value = data.data;
-      workItems.value = pageResult.value?.list || [];
-      await handleWorkListAuthorNickname();
-    } else infoMessage(data.data);
-  } catch (error) {
-    console.error(error);
-    errorMessage("网络异常！");
+  if (categoryId.value) {
+    try {
+      const response = await baseHttp.post("/api/work/works_by_category", pageRequest.value, {
+        params: {
+          status: "PUBLIC",
+          category_id: categoryId.value,
+        }
+      });
+      const data: ResponseImpl = response.data;
+      if (data.code === 0) {
+        pageResult.value = data.data;
+        workItems.value = pageResult.value?.list || [];
+        await handleWorkListAuthorNickname();
+      } else infoMessage(data.data);
+    } catch (error) {
+      console.error(error);
+      errorMessage("网络异常！");
+    }
+  } else {
+    errorMessage("分类ID不存在，客户端异常！异常点：WorkCategoryFetch -> 1");
   }
 }
 
@@ -65,6 +75,13 @@ const itemClicked = (workId: string) => {
   router.push({name: "WorkDetail", query: {work_id: workId}});
 }
 
+
+// 页面组件加载前取出路由器中分类ID信息
+onBeforeMount(() => {
+  categoryId.value = route.params.category_id as string | undefined;
+})
+
+// 页面内容加载完成后，识别路由器中的query参数，是否符合逻辑
 onMounted(() => {
   if (Object.keys(route.query).length === 0) {
     fetchWorks();

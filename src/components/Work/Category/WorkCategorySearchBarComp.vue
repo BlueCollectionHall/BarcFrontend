@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useRouter, useRoute} from "vue-router";
 
 const router = useRouter();
@@ -16,6 +16,13 @@ const searchClicked = () => {
     router.push({query: {keyword: keyword.value}});
   }
 }
+
+onMounted(() => {
+  const routerKeyword: string | undefined | null = route.query.keyword as string | undefined | null;
+  if (routerKeyword) {
+    keyword.value = routerKeyword;
+  }
+})
 </script>
 
 <template>
