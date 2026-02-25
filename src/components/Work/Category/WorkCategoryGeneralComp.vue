@@ -18,26 +18,23 @@ const pageResult = ref<PageResultImpl<WorkImpl> | null>(null);
 const categoryId = ref<string | undefined>(undefined);
 
 const fetchWorks = async () => {
-  if (categoryId.value) {
-    try {
-      const response = await baseHttp.post("/api/work/works_by_category", pageRequest.value, {
-        params: {
-          status: "PUBLIC",
-          category_id: categoryId.value,
-        }
-      });
-      const data: ResponseImpl = response.data;
-      if (data.code === 0) {
-        pageResult.value = data.data;
-        workItems.value = pageResult.value?.list || [];
-        await handleWorkListAuthorNickname();
-      } else infoMessage(data.data);
-    } catch (error) {
-      console.error(error);
-      errorMessage("网络异常！");
-    }
-  } else {
-    errorMessage("分类ID不存在，客户端异常！异常点：WorkCategoryFetch -> 1");
+  try {
+    const response = await baseHttp.post("/api/work/works_by_category", pageRequest.value, {
+      params: {
+        status: "PUBLIC",
+        category_id: route.params.category_id,
+      }
+    });
+    const data: ResponseImpl = response.data;
+    if (data.code === 0) {
+      pageResult.value = data.data;
+      workItems.value = pageResult.value?.list || [];
+      console.log(pageResult.value?.list);
+      await handleWorkListAuthorNickname();
+    } else infoMessage(data.data);
+  } catch (error) {
+    console.error(error);
+    errorMessage("网络异常！");
   }
 }
 

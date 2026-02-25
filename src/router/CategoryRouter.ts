@@ -8,7 +8,7 @@ export default {
   children: [
     {
       path: ":category_id",
-      props: true,
+      // props: true,
       name: "CategoryOnly",
       component: WorkCategoryGeneralComp
     }
